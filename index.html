@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Repo</title>
+    <title>X Page</title>
     <style type="text/css">
       * {
         padding: 0;
@@ -13,20 +13,67 @@
       body {
         width: 100vw;
         height: 100vh;
-        padding: 0px 32px;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        position: relative;
       }
 
       h1 {
         font-size: 24px;
       }
+
+      #main {
+        width: 100%;
+        height: 100%;
+        padding: 0px 32px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      footer {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        bottom: 12px;
+        transform: translateX(-50%);
+        color: #555;
+      }
+
+      #success {
+        display: none;
+        position: relative;
+      }
+
+      #success #logo {
+        height: 96px;
+      }
+
+      #success #check_mark {
+        width: 48px;
+        height: 48px;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        background-color: #fff;
+        border-radius: 24px;
+      }
     </style>
   </head>
   <body>
-    <h1 id="message"></h1>
+    <div id="main">
+      <div id="success">
+        <img id="logo" src="./images/twitter_log.png" />
+        <img id="check_mark" src="./images/check_mark.svg" />
+      </div>
+      <div style="height: 24px"></div>
+      <h1 id="message"></h1>
+    </div>
+    <footer id="footer">
+      This is a third-party page provided by
+      <a href="https://github.com/dokar3">dokar3@github.com</a>
+    </footer>
     <script type="text/javascript">
       function parseAuthCode() {
         const query = window.location.href.split("?")[1];
@@ -41,9 +88,11 @@
         }
 
         const code = match[1];
+        document.title = "Login succeeded";
         document.cookie = `twitter_auth_code=${code}`;
+        success.style = "display: inline";
         message.innerHTML =
-          "Connected to your twitter account<br>please close this page";
+          "Connected to your twitter account!<br>please close this page";
       }
       parseAuthCode();
     </script>
