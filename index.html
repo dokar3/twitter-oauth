@@ -52,7 +52,7 @@
         height: 96px;
       }
 
-      #success #check_mark {
+      #success #status_icon {
         width: 48px;
         height: 48px;
         position: absolute;
@@ -66,11 +66,11 @@
   <body>
     <div id="main">
       <div id="success">
-        <img id="logo" src="./images/twitter_log.png" />
-        <img id="check_mark" src="./images/check_mark.svg" />
+        <img id="logo" src="./images/twitter_logo.png" />
+        <img id="status_icon" />
       </div>
       <div style="height: 24px"></div>
-      <h1 id="message"></h1>
+      <h1 id="message">Nothing here</h1>
     </div>
     <footer id="footer">
       This is a third-party page provided by
@@ -80,22 +80,40 @@
       function parseAuthCode() {
         const query = window.location.href.split("?")[1];
         if (!query) {
-          message.innerHTML = "Nothing here";
           return;
         }
 
-        const match = /code=([A-Za-z0-9]+)/.exec(query);
-        if (!match) {
-          message.innerHTML = "Nothing here";
+        const authCodeMatch = /code=([A-Za-z0-9]+)/.exec(query);
+        if (authCodeMatch) {
+          showSucceeded(authCodeMatch[1]);
+          return;
         }
 
-        const code = match[1];
+        const errorMatch = /error=access_denied/.exec(query);
+        if (errorMatch) {
+          showDenied();
+          return;
+        }
+      }
+
+      function showSucceeded(code) {
         document.title = "Login succeeded";
         document.cookie = `twitter_auth_code=${code}`;
+        status_icon.src = "./images/check_circle.svg";
         success.style = "display: inline";
         message.innerHTML =
-          "Connected to your twitter account!<br>please close this page";
+          "Connected to your twitter account!<br>Please close this page";
       }
+
+      function showDenied() {
+        document.title = "Login denied";
+        document.cookie = "";
+        status_icon.src = "./images/close_circle.svg";
+        success.style = "display: inline";
+        message.innerHTML =
+          "Login denied<br>Please close this page and try again";
+      }
+
       parseAuthCode();
     </script>
   </body>
